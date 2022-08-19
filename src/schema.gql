@@ -3,28 +3,227 @@
 # ------------------------------------------------------
 
 type Student {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: String!
+  name: String!
+  key: String!
+}
+
+type DeleteManyResponse {
+  """The number of records deleted."""
+  deletedCount: Int!
+}
+
+type StudentDeleteResponse {
+  id: String
+  name: String
+  key: String
+}
+
+type UpdateManyResponse {
+  """The number of records updated."""
+  updatedCount: Int!
+}
+
+type StudentEdge {
+  """The node containing the Student"""
+  node: Student!
+
+  """Cursor for this node."""
+  cursor: ConnectionCursor!
+}
+
+"""Cursor for paging through collections"""
+scalar ConnectionCursor
+
+type PageInfo {
+  """true if paging forward and there are more records."""
+  hasNextPage: Boolean
+
+  """true if paging backwards and there are more records."""
+  hasPreviousPage: Boolean
+
+  """The cursor of the first returned record."""
+  startCursor: ConnectionCursor
+
+  """The cursor of the last returned record."""
+  endCursor: ConnectionCursor
+}
+
+type StudentConnection {
+  """Paging information"""
+  pageInfo: PageInfo!
+
+  """Array of edges."""
+  edges: [StudentEdge!]!
+
+  """Fetch total count of records"""
+  totalCount: Int!
+}
+
+type StudentAggregateGroupBy {
+  name: String
+  key: String
+}
+
+type StudentCountAggregate {
+  name: Int
+  key: Int
+}
+
+type StudentMinAggregate {
+  name: String
+  key: String
+}
+
+type StudentMaxAggregate {
+  name: String
+  key: String
 }
 
 type Query {
-  students: [Student!]!
-  student(id: Int!): Student!
+  student(
+    """The id of the record to find."""
+    id: ID!
+  ): Student
+  students(
+    """Limit or page results."""
+    paging: CursorPaging = {first: 10}
+
+    """Specify to filter the records returned."""
+    filter: StudentFilter = {}
+
+    """Specify to sort results."""
+    sorting: [StudentSort!] = []
+  ): StudentConnection!
+}
+
+input CursorPaging {
+  """Paginate before opaque cursor"""
+  before: ConnectionCursor
+
+  """Paginate after opaque cursor"""
+  after: ConnectionCursor
+
+  """Paginate first"""
+  first: Int
+
+  """Paginate last"""
+  last: Int
+}
+
+input StudentFilter {
+  and: [StudentFilter!]
+  or: [StudentFilter!]
+  name: StringFieldComparison
+  key: StringFieldComparison
+}
+
+input StringFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: String
+  neq: String
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  like: String
+  notLike: String
+  iLike: String
+  notILike: String
+  in: [String!]
+  notIn: [String!]
+}
+
+input StudentSort {
+  field: StudentSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum StudentSortFields {
+  name
+  key
+}
+
+"""Sort Directions"""
+enum SortDirection {
+  ASC
+  DESC
+}
+
+"""Sort Nulls Options"""
+enum SortNulls {
+  NULLS_FIRST
+  NULLS_LAST
 }
 
 type Mutation {
-  createStudent(createStudentInput: CreateStudentInput!): Student!
-  updateStudent(updateStudentInput: UpdateStudentInput!): Student!
-  removeStudent(id: Int!): Student!
+  createOneStudent(input: CreateOneStudentInput!): Student!
+  createManyStudents(input: CreateManyStudentsInput!): [Student!]!
+  updateOneStudent(input: UpdateOneStudentInput!): Student!
+  updateManyStudents(input: UpdateManyStudentsInput!): UpdateManyResponse!
+  deleteOneStudent(input: DeleteOneStudentInput!): StudentDeleteResponse!
+  deleteManyStudents(input: DeleteManyStudentsInput!): DeleteManyResponse!
+}
+
+input CreateOneStudentInput {
+  """The record to create"""
+  student: CreateStudentInput!
 }
 
 input CreateStudentInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
+  key: String!
+}
+
+input CreateManyStudentsInput {
+  """Array of records to create"""
+  students: [CreateStudentInput!]!
+}
+
+input UpdateOneStudentInput {
+  """The id of the record to update"""
+  id: ID!
+
+  """The update to apply."""
+  update: UpdateStudentInput!
 }
 
 input UpdateStudentInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  name: String
+  key: String
+  id: String!
+}
+
+input UpdateManyStudentsInput {
+  """Filter used to find fields to update"""
+  filter: StudentUpdateFilter!
+
+  """The update to apply to all records found using the filter"""
+  update: UpdateStudentInput!
+}
+
+input StudentUpdateFilter {
+  and: [StudentUpdateFilter!]
+  or: [StudentUpdateFilter!]
+  name: StringFieldComparison
+  key: StringFieldComparison
+}
+
+input DeleteOneStudentInput {
+  """The id of the record to delete."""
+  id: ID!
+}
+
+input DeleteManyStudentsInput {
+  """Filter to find records to delete"""
+  filter: StudentDeleteFilter!
+}
+
+input StudentDeleteFilter {
+  and: [StudentDeleteFilter!]
+  or: [StudentDeleteFilter!]
+  name: StringFieldComparison
+  key: StringFieldComparison
 }
