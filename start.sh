@@ -1,5 +1,5 @@
 #!/bin/sh
 
-# npm install &
+npm install --force &
 
 tail -f /dev/null
