@@ -25,6 +25,5 @@ import { Student } from './entities/student.entity';
       ],
     }),
   ],
-  providers: [],
 })
 export class StudentsModule {}
